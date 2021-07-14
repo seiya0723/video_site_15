@@ -83,30 +83,32 @@
 
         {% for history in histories %}
         <div class="video_content">
-            <a class="video_content_link" href="{% url 'tube:single' history.target.id %}">
-                {% if history.target.thumbnail %}
-                <img class="video_thumbnail" src="/media/{{ history.target.thumbnail }}" alt="{{ history.target.title }}">
+            <a class="video_content_link" href="{% url 'tube:single' history.id %}">
+                {% if history.thumbnail %}
+                <img class="video_thumbnail" src="/media/{{ history.thumbnail }}" alt="{{ history.title }}">
                 {% else %}
-                <img class="video_thumbnail" src="{% static 'tube/img/no-img.png' %}" alt="{{ history.target.title }}">
+                <img class="video_thumbnail" src="{% static 'tube/img/no-img.png' %}" alt="{{ history.title }}">
                 {% endif %}
             </a>
 
             <div class="index_video_content_inner">
                 <div class="index_video_content_inner_left">
-                    {% if history.target.user.usericon %}
-                    <a href="{% url 'tube:usersingle' history.target.user.id %}"><img class="index_usericon" src="/media/{{ history.target.user.usericon }}" alt="icon"></a>
+                    {% if history.user.usericon %}
+                    <a href="{% url 'tube:usersingle' history.user.id %}"><img class="index_usericon" src="/media/{{ history.user.usericon }}" alt="icon"></a>
                     {% else %}
-                    <a href="{% url 'tube:usersingle' history.target.user.id %}"><img class="index_usericon" src="/media/tube/usericon/non_usericon.png" alt="{{ icon }}"></a>
+                    <a href="{% url 'tube:usersingle' history.user.id %}"><img class="index_usericon" src="/media/tube/usericon/non_usericon.png" alt="{{ icon }}"></a>
                     {% endif %}
                 </div>
 
                 <div class="index_video_content_inner_right">
-                    <a href="{% url 'tube:single' history.target.id %}"><div class="video_title">{{ history.target.title }}</div></a>
-                    <a href="{% url 'tube:usersingle' history.target.user.id %}"><div>{{ history.target.user.handle_name }} </div></a>
+                    <a href="{% url 'tube:single' history.id %}"><div class="video_title">{{ history.title }}</div></a>
+                    <a href="{% url 'tube:usersingle' history.user.id %}"><div>{{ history.user.handle_name }} </div></a>
                     <div class="video_value">
-                        <span class="v_value_span"><i class="far fa-play-circle"></i>{{ history.target.views|intcomma }}</span>
+                        <span class="v_value_span"><i class="far fa-play-circle"></i>{{ history.views|intcomma }}</span>
+                        <span class="v_value_span"><i class="far fa-comments"></i>{{ history.num_comments }}</span>
+                        <span class="v_value_span"><i class="far fa-list-alt"></i>{{ history.num_mylists }}</span>
                     </div>
-                    <div>{{ history.target.dt|date:"Y年m月d日" }}</div>
+                    <div>{{ history.dt|date:"Y年m月d日" }}</div>
                 </div>
             </div>
 

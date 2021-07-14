@@ -57,6 +57,34 @@ class IndexView(views.APIView):
             #TODO:マイリスト数とGood数を追加して表示させるには？
             histories = History.objects.filter(user=request.user.id).exclude(target__user__blocked=request.user.id).order_by("-dt")[:DEFAULT_VIDEO_AMOUNT]
 
+            hist_id_list   = []
+            for history in histories:
+                hist_id_list.append(history.target.id)
+
+            print(hist_id_list)
+
+            histories = Video.objects.annotate(num_comments=Count("videocomment", distinct=True),num_mylists=Count("mylist", distinct=True)).filter(id__in=hist_id_list).order_by("-dt")
+
+            print(histories)
+            for history in histories:
+                print(history.num_comments)
+                print(history.num_mylists)
+
+
+            
+
+
+
+            """
+            ■historiesにコメント数とマイリストを表示させる方法
+            1.まず、これまで通りhistoriesで検索する。
+            2.historiesのidをリストに変換。
+            3.Videoにて先ほどのidのリストで検索する。
+            """
+
+
+
+
             # フォローユーザーの動画
             follows = Video.objects.filter(user__followed=request.user.id).order_by("-dt")[:DEFAULT_VIDEO_AMOUNT]
             follows = Video.objects.annotate(num_comments=Count("videocomment", distinct=True),num_mylists=Count("mylist", distinct=True)).filter(user__followed=request.user.id).order_by("-dt")[:DEFAULT_VIDEO_AMOUNT]
