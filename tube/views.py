@@ -54,6 +54,7 @@ class IndexView(views.APIView):
         if request.user.is_authenticated:
 
             # 最近見た動画
+            #TODO:マイリスト数とGood数を追加して表示させるには？
             histories = History.objects.filter(user=request.user.id).exclude(target__user__blocked=request.user.id).order_by("-dt")[:DEFAULT_VIDEO_AMOUNT]
 
             # フォローユーザーの動画
@@ -460,7 +461,6 @@ single_mod = SingleModView.as_view()
 
 
 
-#TODO:ここにコメントのリプライビューを作る
 #GET:リプライの参照、レンダリングして返す。POST:リプライの送信とバリデーション保存。いずれもAjaxで実装させる
 
 #CHECK:ここのcomment_pkはコメントのID意味している。
@@ -482,7 +482,6 @@ class VideoCommentReplyView(views.APIView):
 
     def post(self,request,comment_pk,*args,**kwargs):
 
-        #TODO:シリアライザでバリデーション。問題なければ保存する。
         #TODO:ユーザーがブロックしている場合、コメント投稿できないようにするのは？
 
         copied              = request.POST.copy()

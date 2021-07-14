@@ -28,7 +28,10 @@ window.addEventListener("load" , function (){
     //リプライ関係
     $(document).on("click",".reply_submit",function(){ comment_reply( $(this).val()); });
     //チェックボタンが有効になった時リプライのGET文を送信
-    $(document).on("change",".reply_chk", function(){ comment_reply( $(this).attr("id").replace("reply_button_",""), true ) });
+    $(document).on("change",".reply_chk", function(){ 
+        if ( $(this).prop("checked") ){
+            comment_reply( $(this).attr("id").replace("reply_button_",""), true );
+    });
 
 
     const video   = document.querySelector("video");
