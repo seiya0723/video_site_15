@@ -1,0 +1,43 @@
+{% load param_change %}
+
+{% for comment in comments %}
+<div class="s_video_sub_inner">
+
+    <div class="s_video_sub_inner_left">
+        <a href="{% url 'tube:usersingle' comment.user.id %}">
+            {% if comment.user.usericon %}
+                <div><img class="video_usericon" src="/media/{{ comment.user.usericon }}" alt="icon"></div>
+            {% else %}
+                <div><img class="video_usericon" src="/media/tube/usericon/non_usericon.png" alt="{{ icon }}"></div>
+            {% endif %}
+        </a>
+    </div>
+
+    <div class="s_video_sub_inner_right">
+        <a href="{% url 'tube:usersingle' comment.user.id %}"><div> {{ comment.user.handle_name }} </div></a>
+        <div>{{ comment.content|linebreaksbr|urlize }}</div>
+        <!--TODO:返信ボタンはチェックボックス式の折りたたみ構造にする-->
+        <div>{{ comment.dt|date:"Y-m-d h時" }} </div>
+
+        <!--TIPS:コメントはループするのでidが重複してしまう。id属性の指定は禁止 ←ただし、UUIDを噛ませることで重複を防ぐことができる。-->
+        <input id="reply_button_{{ comment.id }}" class="reply_chk" type="checkbox"><label class="reply_label" for="reply_button_{{ comment.id }}">返信</label>
+        <div class="reply_area">
+            <form id="reply_form_{{ comment.id }}" action="{% url 'tube:video_comment_reply' comment.id  %}" method="POST">
+                {% csrf_token %}
+                <input type="text" name="content">
+                <button class="reply_submit" value="{{ comment.id }}" type="button">リプライ</button>
+            </form>
+            <div id="reply_content_{{ comment.id }}"><!--TODO:ここにリプライがJSによりレンダリングされる--></div>
+        </div>
+
+    </div>
+
+</div>
+{% endfor %}
+
+{% if comments %}
+<form id="comment_pagination_area" class="pagination_area" action="{% url 'tube:single_mod' video.id %}" method="GET">
+    {% generate_pagelink_ajax request "page" "1" comments.paginator.num_pages comments.number %}
+</form>
+{% endif %}
+
